@@ -1,4 +1,5 @@
 from datetime import datetime
+from werkzeug.security import check_password_hash, generate_password_hash
 
 def init_model(db):
 
@@ -7,12 +8,12 @@ def init_model(db):
         db.Column('categoria_id', db.Integer, db.ForeignKey('categoria.id'), primary_key=True)
     )
 
-
     class Cliente(db.Model):
         id = db.Column(db.Integer, primary_key=True)
         first_name = db.Column(db.String(50), nullable=False)
         last_name = db.Column(db.String(50), nullable=False)
         email = db.Column(db.String(120), nullable=False)
+        senha = db.Column(db.String(200), nullable=False)  
         endereco = db.Column(db.Text)
         telefone = db.Column(db.String(15))
         data_cadastro = db.Column(db.Date, default=datetime.utcnow)
@@ -23,6 +24,12 @@ def init_model(db):
         
         def __str__(self):
             return f"{self.first_name} <{self.email}>"
+        
+        def set_senha(self, senha):
+            self.senha = generate_password_hash(senha)
+
+        def verificar_senha(self, senha):
+            return check_password_hash(self.senha, senha)
         
         def to_dict(self):
             return {
@@ -103,7 +110,7 @@ def init_model(db):
             return sum(item.preco_unitario * item.quantidade for item in self.itens)
         
         def __str__(self):
-            return f"Pedido #{self.id} - Cliente: {self.cliente.user.last_name} - Status: {self.status}"
+            return f"Pedido #{self.id} - Cliente: {self.cliente.last_name} - Status: {self.status}"
         
         def to_dict(self):
             return {
@@ -144,7 +151,7 @@ def init_model(db):
         itens = db.relationship('ItemCarrinho', backref='carrinho', lazy=True)
         
         def __str__(self):
-            return f"Carrinho #{self.id} - Cliente: {self.cliente.user.first_name} - Status: {self.status}"
+            return f"Carrinho #{self.id} - Cliente: {self.cliente.first_name} - Status: {self.status}"
         
         def total(self):
             return sum(item.produto.preco * item.quantidade for item in self.itens)

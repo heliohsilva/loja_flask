@@ -17,6 +17,7 @@ class ClienteView(ModelView):
         'carrinho': 'Carrinho',
         'reviews': 'Avaliações'
     }
+
     form_excluded_columns = ['pedidos', 'carrinho', 'reviews', 'data_cadastro']
     column_searchable_list = ['first_name', 'last_name', 'email']
     column_filters = ['data_cadastro', 'endereco']
@@ -41,18 +42,24 @@ class ProdutoView(ModelView):
     def get_categoria_model(self):
         return self.categoria_model
 
-    column_list = ['id', 'nome', 'descricao', 'preco', 'estoque', 'imagem', 'categorias']
+    column_list = ['id', 'nome', 'descricao', 'preco', 'estoque', 'imagem', 'categorias', 'reviews']
     column_labels = {
         'nome': 'Nome do Produto',
         'descricao': 'Descrição',
         'preco': 'Preço',
         'estoque': 'Estoque',
         'imagem': 'Imagem',
-        'categorias': 'Categorias'
+        'categorias': 'Categorias',
+        'reviews': 'Avaliação'
     }
+
+    column_formatters = {
+        'reviews': lambda v, c, m, p: f"{m.star_rating():.1f} ★" if m.star_rating() else "Sem avaliações"
+    }
+
     form_excluded_columns = ['itens_pedido', 'itens_carrinho', 'reviews']
     column_searchable_list = ['nome', 'descricao']
-    column_filters = ['preco', 'estoque', 'categorias']
+    column_filters = ['preco', 'estoque', 'categorias', 'reviews']
     
     form_overrides = {
         'imagem': ImageUploadField,
@@ -61,20 +68,16 @@ class ProdutoView(ModelView):
 
     def create_form(self, obj=None):
         form = super().create_form(obj)
-        # Configure categorias field
         form.categorias.query_factory = lambda: self.session.query(self.categoria_model).all()
         form.categorias.get_label = lambda c: c.nome
-        # Configure image upload field
         form.imagem.base_path = 'media/uploads'
         form.imagem.relative_path = 'uploads'
         return form
 
     def edit_form(self, obj=None):
         form = super().edit_form(obj)
-        # Configure categorias field
         form.categorias.query_factory = lambda: self.session.query(self.categoria_model).all()
         form.categorias.get_label = lambda c: c.nome
-        # Configure image upload field
         form.imagem.base_path = 'media/uploads'
         form.imagem.relative_path = 'uploads'
         return form
@@ -227,7 +230,6 @@ class ReviewView(ModelView):
             form.produto.query_factory = lambda: self.session.query(self.produto_model).all()
             form.produto.get_label = lambda p: p.nome
         return form
-
 
 
 def set_admin(app, db, models):

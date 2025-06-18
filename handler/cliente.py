@@ -25,9 +25,11 @@ def initialize_cliente_endpoints(app, Cliente, db):
             last_name=data.get('last_name'),
             email=data.get('email'),
             endereco=data.get('endereco'),
-            telefone=data.get('telefone')
+            telefone=data.get('telefone'),
         )
         
+        novo_cliente.set_senha(data.get('senha', ''))
+
         db.session.add(novo_cliente)
         db.session.commit()
         
@@ -48,6 +50,9 @@ def initialize_cliente_endpoints(app, Cliente, db):
             cliente.endereco = data['endereco']
         if 'telefone' in data:
             cliente.telefone = data['telefone']
+        
+        if 'senha' in data:
+            cliente.set_senha(data['senha'])
         
         db.session.commit()
         
