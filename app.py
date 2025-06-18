@@ -1,9 +1,7 @@
-from flask import Flask, request, jsonify
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_admin import Admin
-from flask_admin.contrib.sqla import ModelView
-from flask import Blueprint, request, jsonify
 import handler
+import admin
 
 import handler.handler
 from model.model import init_model
@@ -19,17 +17,7 @@ db = SQLAlchemy(app)
 
 models = init_model(db)
 
-admin = Admin(app, name='loja flask admin', template_mode='bootstrap3')
-
-admin.add_view(ModelView(models["Cliente"], db.session))
-admin.add_view(ModelView(models["Categoria"], db.session))
-admin.add_view(ModelView(models["Produto"], db.session))
-admin.add_view(ModelView(models["Pedido"], db.session))
-admin.add_view(ModelView(models["ItemPedido"], db.session))
-admin.add_view(ModelView(models["Carrinho"], db.session))
-admin.add_view(ModelView(models["ItemCarrinho"], db.session))
-admin.add_view(ModelView(models["Review"], db.session))
-admin.add_view(ModelView(models["Pagamento"], db.session))
+admin.set_admin(app, db, models)
 
 handler.handler.initialize_endpints(app, models, db)
 
