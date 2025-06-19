@@ -319,7 +319,7 @@
                         <i class="fa-regular fa-star"></i>
                         {% endfor %}
                     </div>
-                    <span class="rating-value">{{ produto.star_rating|round(1) }}</span>
+                    <span class="rating-value">{{ produto.star_rating() }}</span>
                     <a href="#reviews" class="reviews-count">
                         {{ produto.count_reviews }} avaliações
                     </a>
@@ -342,7 +342,7 @@
                 <button class="quantity-btn" id="increase-btn">+</button>
             </div>
 
-            <a href="{{ url_for('adicionar_ao_carrinho', produto.id) }}" class="buy-link">
+            <a href="{{ url_for('view.adicionar_ao_carrinho', id=produto.id) }}" class="buy-link">
                 <button class="buy-button" {% if not produto.em_estoque %}disabled{% endif %}>
                     {% if produto.em_estoque %}Comprar{% else %}Fora de Estoque{% endif %}
                 </button>
@@ -354,8 +354,8 @@
         <h2>Avaliações ({{ produto.count_reviews }})</h2>
 
         {% if current_user.is_authenticated %}
-        <form action="{{ url_for('adicionar_comentario', produto.id) }}" method="post" class="review-form">
-            {{ csrf_token() }}
+        <form action="{{ url_for('view.adicionar_comentario', id=produto.id) }}" method="post" class="review-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="user-avatar">
                 <i class="fas fa-user-circle"></i>
             </div>
@@ -384,7 +384,7 @@
                 <i class="fas fa-user-circle"></i>
             </div>
             <div class="review-content">
-                <p>Faça <a href="{{ url_for('login') }}">login</a> para deixar uma avaliação sobre este produto.</p>
+                <p>Faça <a href="{{ url_for('view.login') }}">login</a> para deixar uma avaliação sobre este produto.</p>
             </div>
         </div>
         {% endif %}

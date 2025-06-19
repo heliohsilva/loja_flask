@@ -1,22 +1,24 @@
 from datetime import datetime
 from werkzeug.security import check_password_hash, generate_password_hash
+from flask_login import UserMixin
 
 def init_model(db):
 
     produto_categoria = db.Table('produto_categoria',
         db.Column('produto_id', db.Integer, db.ForeignKey('produto.id'), primary_key=True),
-        db.Column('categoria_id', db.Integer, db.ForeignKey('categoria.id'), primary_key=True)
+        db.Column('categoria_id', db.Integer, db.ForeignKey('categoria.id'), primary_key=True),
+        extend_existing=True 
     )
 
 
-    class Cliente(db.Model):
+    class Cliente(db.Model, UserMixin):
         id = db.Column(db.Integer, primary_key=True)
         username = db.Column(db.String(50), unique=True, nullable=False)
         email = db.Column(db.String(120), unique=True, nullable=False)
         senha = db.Column(db.String(200), nullable=False)
 
         first_name = db.Column(db.String(50), nullable=False)
-        last_name = db.Column(db.String(50), nullable=False)
+        last_name = db.Column(db.String(50), nullable=False, default='')
         endereco = db.Column(db.Text)
         telefone = db.Column(db.String(15))
         data_cadastro = db.Column(db.Date, default=datetime.utcnow)

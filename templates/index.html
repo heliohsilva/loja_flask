@@ -13,14 +13,181 @@
         rel="stylesheet" />
 
     <style>
-        /* ... seu CSS permanece igual ... */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #1a1a1a;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .logo i {
+            margin-right: 8px;
+            font-size: 28px;
+        }
+
+        .search-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            padding: 0 40px;
+        }
+
+        .search-bar {
+            display: flex;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .search-bar input {
+            border: none;
+            padding: 10px 15px;
+            font-size: 14px;
+            flex-grow: 1;
+            background-color: #f5f5f5;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            background-color: #ffffff;
+        }
+
+        .search-bar button {
+            border: none;
+            background-color: #f5f5f5;
+            color: #757575;
+            padding: 0 20px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .main-nav ul,
+        .header-icons ul {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .main-nav a {
+            font-size: 15px;
+            color: #333;
+            padding: 10px;
+        }
+
+        .header-icons i {
+            font-size: 24px;
+            color: #333;
+        }
+
+        .category-nav {
+            border-bottom: 1px solid #e5e5e5;
+            background-color: #333;
+        }
+
+        .category-nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 45px;
+            padding: 15px 0;
+        }
+
+        .category-nav a {
+            font-size: 15px;
+            font-weight: 500;
+            color: #e5e5e5;
+        }
+
+        main {
+            padding: 40px 0;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px 20px;
+        }
+
+        .product-card {
+            text-align: left;
+            display: block;
+        }
+
+        .product-card .product-image {
+            background-color: #f0f0f0;
+            margin-bottom: 15px;
+        }
+
+        .product-card img {
+            width: 100%;
+            display: block;
+        }
+
+        .product-card .product-name {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .product-card .product-price {
+            font-size: 20px;
+            color: #025007;
+            text-align: left;
+        }
+
+        .product-image {
+            aspect-ratio: 3 / 3;
+            border-radius: 4px;
+            background-color: #f0f0f0;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
     </style>
 </head>
 
 <body>
 
     <header class="main-header container">
-        <a href="{{ url_for('index') }}">
+        <a href="{{ url_for('view.index') }}">
             <div class="logo">
                 <i class="bx bx-store-alt"></i>
                 <span>Budega</span>
@@ -43,12 +210,12 @@
 
         <div class="header-icons">
             <ul>
-                <li><a href="{{ url_for('carrinho') }}"><i class="bx bx-cart"></i></a></li>
-                <li><a href="{{ url_for('minha_conta') }}"><i class="bx bx-user-circle"></i></a></li>
+                <li><a href="{{ url_for('view.carrinho') }}"><i class="bx bx-cart"></i></a></li>
+                <li><a href="{{ url_for('view.minha_conta') }}"><i class="bx bx-user-circle"></i></a></li>
                 {% if user.is_authenticated %}
-                <li><a href="{{ url_for('logout') }}"><i class="bx bx-log-out"></i></a></li>
+                <li><a href="{{ url_for('view.logout') }}"><i class="bx bx-log-out"></i></a></li>
                 {% else %}
-                <li><a href="{{ url_for('login') }}"><i class="bx bx-log-in"></i></a></li>
+                <li><a href="{{ url_for('view.login') }}"><i class="bx bx-log-in"></i></a></li>
                 {% endif %}
             </ul>
         </div>
@@ -73,7 +240,7 @@
     <main class="container">
         <div class="product-grid">
             {% for product in products %}
-            <a href="{{ url_for('produto', product_id=product.id) }}" class="product-card">
+            <a href="{{ url_for('view.produto', product_id=product.id) }}" class="product-card">
                 <div class="product-image">
                     {% if product.imagem and product.imagem.url %}
                     <img src="{{ product.imagem.url }}" alt="{{ product.nome }}" class="product_image" />

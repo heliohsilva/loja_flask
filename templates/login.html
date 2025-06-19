@@ -1,8 +1,8 @@
 {% include 'header.html' %}
 {% include 'navbar.html' %}
 
-<form method="post" action="{{ url_for('front.login') }}">
-  {{ csrf_token() }}
+<form method="post" action="{{ url_for('view.login') }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
   {% with messages = get_flashed_messages() %}
     {% for msg in messages %}
       <p class="error">{{ msg }}</p>
@@ -146,8 +146,8 @@
         <i class="fa-regular fa-user login-icon"></i>
         <h2>LOGIN</h2>
       </div>
-      <form method="post" action="{{ url_for('front.login') }}">
-        {{ csrf_token() }}
+      <form method="post" action="{{ url_for('view.login') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         {% with messages = get_flashed_messages() %}
           {% if messages %}
             {% for msg in messages %}
@@ -160,7 +160,7 @@
           <label for="login-email">Email</label>
         </div>
         <div class="input-group">
-          <input type="password" id="login-senha" name="password" placeholder=" " required>
+          <input type="password" id="login-senha" name="senha" placeholder=" " required>
           <label for="login-senha">Senha</label>
         </div>
         <button type="submit" class="btn-primary">Prosseguir</button>
@@ -170,8 +170,8 @@
     <!-- CADASTRO -->
     <div class="form-box register-box">
       <h3>Ainda não possuo cadastro.</h3>
-      <form method="post" action="{{ url_for('front.cadastro') }}">
-        {{ csrf_token() }}
+      <form method="post" action="{{ url_for('view.cadastro') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         {% with messages = get_flashed_messages() %}
           {% if messages %}
             {% for msg in messages %}
@@ -188,11 +188,11 @@
           <label for="register-email">Email</label>
         </div>
         <div class="input-group">
-          <input type="password" id="register-password" name="password" placeholder=" " required>
+          <input type="password" id="register-password" name="senha" placeholder=" " required>
           <label for="register-password">Senha</label>
         </div>
         <div class="input-group">
-          <input type="password" id="register-confirm-password" name="confirm_password" placeholder=" " required>
+          <input type="password" id="register-confirm-password" name="confirmar_senha" placeholder=" " required>
           <label for="register-confirm-password">Confirmar senha</label>
         </div>
         <div class="input-group">

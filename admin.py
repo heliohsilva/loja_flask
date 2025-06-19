@@ -7,8 +7,6 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask import redirect, url_for, current_app
 from flask import jsonify
 
-
-
 class ClienteView(ModelView):
     def __init__(self, model, session, **kwargs):
         super().__init__(model, session, **kwargs)

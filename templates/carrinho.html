@@ -204,7 +204,7 @@
                         <span>{{ item.quantidade }}</span>
                         <button class="quantity-btn">+</button>
                     </div>
-                    <a class="delete-btn" href="{{ url_for('remover_item_carrinho', item_id=item.id) }}">
+                    <a class="delete-btn" href="{{ url_for('view.remover_item_carrinho', item_id=item.id) }}">
                         <i class="fas fa-trash-alt"></i>
                     </a>
                 </div>
@@ -224,7 +224,7 @@
             <span>Total</span>
             <span>{{ valor_total }}</span>
         </div>
-        <a class="checkout-btn" href="{{ url_for('pagamento') }}">
+        <a class="checkout-btn" href="{{ url_for('view.pagamento') }}">
             Ir para o Pagamento
             <i class="fas fa-arrow-right"></i>
         </a>
