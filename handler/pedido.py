@@ -1,5 +1,6 @@
 from flask import jsonify
 from flask import request
+from flask_jwt_extended import jwt_required
 
 def initialize_pedido_endpoints(app, Pedido, db):
 
@@ -9,12 +10,15 @@ def initialize_pedido_endpoints(app, Pedido, db):
         print(pedidos)
         return jsonify([pedido.to_dict() for pedido in pedidos]), 200
     
-    @app.route('/pedido/<int:id>/', methods=['GET'])
+    
+    @app.route('/pedido/<int:id>/', methods=['GET'], endpoint='get_pedido')
+    @jwt_required
     def get_pedido(id):
         pedido = Pedido.query.get_or_404(id)
         return jsonify(pedido.to_dict()), 200
     
-    @app.route('/pedido/', methods=['POST'])
+    @app.route('/pedido/', methods=['POST'], endpoint='create_pedido')
+    @jwt_required
     def create_pedido():
         data = request.get_json()
         if not data:

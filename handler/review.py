@@ -1,5 +1,6 @@
 from flask import jsonify
 from flask import request
+from flask_jwt_extended import jwt_required
 
 def initialize_review_endpoints(app, Review, db):
 
@@ -14,7 +15,8 @@ def initialize_review_endpoints(app, Review, db):
         review = Review.query.get_or_404(id)
         return jsonify(review.to_dict()), 200
     
-    @app.route('/review/', methods=['POST'])
+    @app.route('/review/', methods=['POST'], endpoint='create_review')
+    @jwt_required
     def create_review():
         data = request.get_json()
         if not data:
@@ -32,7 +34,8 @@ def initialize_review_endpoints(app, Review, db):
         
         return jsonify(novo_review.to_dict()), 201
     
-    @app.route('/review/<int:id>/', methods=['PUT'])
+    @app.route('/review/<int:id>/', methods=['PUT'], endpoint='update_review')
+    @jwt_required
     def update_review(id):
         review = Review.query.get_or_404(id)
         data = request.get_json()
@@ -50,7 +53,8 @@ def initialize_review_endpoints(app, Review, db):
         
         return jsonify(review.to_dict()), 200
     
-    @app.route('/review/<int:id>/', methods=['DELETE'])
+    @app.route('/review/<int:id>/', methods=['DELETE'], endpoint='delete_review')
+    @jwt_required
     def delete_review(id):
         review = Review.query.get_or_404(id)
         db.session.delete(review)

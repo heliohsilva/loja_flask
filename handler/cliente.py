@@ -23,12 +23,13 @@ def initialize_cliente_endpoints(app, Cliente, db):
         novo_cliente = Cliente(
             first_name=data.get('first_name'),
             last_name=data.get('last_name'),
+            username=data.get('username'),
             email=data.get('email'),
             endereco=data.get('endereco'),
             telefone=data.get('telefone'),
         )
         
-        novo_cliente.set_senha(data.get('senha', ''))
+        novo_cliente.set_password(data.get('senha', ''))
 
         db.session.add(novo_cliente)
         db.session.commit()

@@ -1,7 +1,8 @@
 from flask import jsonify
 from flask import request
+from flask_jwt_extended import jwt_required
 
-def initialize_produto_endpoints(app, Produto, db):
+def initialize_produto_endpoints(app, Produto, Categoria, db):
 
     @app.route('/produtos/', methods=['GET'])
     def get_produtos():
@@ -19,13 +20,22 @@ def initialize_produto_endpoints(app, Produto, db):
         data = request.get_json()
         if not data:
             return jsonify({'error': 'Dados inválidos'}), 400
-        
+        categoria_id = data.get('id_categoria')
+        if categoria_id:
+            categoria = Categoria.query.get(categoria_id)
+            if not categoria:
+                return jsonify({'error': 'Categoria não encontrada'}), 404
+            
+
         novo_produto = Produto(
             nome=data.get('nome'),
             descricao=data.get('descricao'),
             preco=data.get('preco'),
-            estoque=data.get('estoque')
+            estoque=data.get('estoque'),
+            imagem=data.get('url_image'),
         )
+
+        novo_produto.categorias.append(categoria)
         
         db.session.add(novo_produto)
         db.session.commit()

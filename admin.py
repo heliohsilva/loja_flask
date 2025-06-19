@@ -2,23 +2,62 @@ from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.contrib.sqla.fields import QuerySelectMultipleField, QuerySelectField
 from flask_admin.form import ImageUploadField
+from wtforms import PasswordField
+from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask import redirect, url_for, current_app
+from flask import jsonify
 
 
 
 class ClienteView(ModelView):
-    column_list = ['id', 'first_name', 'last_name', 'email', 'endereco', 'telefone', 'data_cadastro', 'pedidos', 'carrinho', 'reviews']
+    def __init__(self, model, session, **kwargs):
+        super().__init__(model, session, **kwargs)
+        self.model = model
+    
+    def is_accessible(self):
+        try:
+            jwt_required()(lambda: None)()  
+            current_user_id = get_jwt_identity()
+            user = self.model.query.get(current_user_id)
+            return user and user.is_admin
+        
+        except Exception:
+            return False
+
+    def inaccessible_callback(self, name, **kwargs):
+
+        return jsonify({'message': 'Acesso negado! Você não tem permissão para acessar esta página.'}), 403
+    
+    column_list = ['id', 'first_name', 'last_name', 'email', 'endereco', 'telefone', 'data_cadastro', 'senha']
+    
     column_labels = {
         'first_name': 'Nome',
         'last_name': 'Sobrenome',
         'endereco': 'Endereço',
         'telefone': 'Telefone',
         'data_cadastro': 'Data de Cadastro',
-        'pedidos': 'Pedidos',
-        'carrinho': 'Carrinho',
-        'reviews': 'Avaliações'
+        'senha': 'Senha'
     }
+    
+    form_excluded_columns = ['data_cadastro', 'senha']
+    
+    form_extra_fields = {
+        'password': PasswordField('Senha')
+    }
+    
+    def on_model_change(self, form, model, is_created):
+        if hasattr(form, 'password') and form.password.data:
+            model.set_password(form.password.data)
 
-    form_excluded_columns = ['pedidos', 'carrinho', 'reviews', 'data_cadastro']
+            form.password.data = ''
+        super().on_model_change(form, model, is_created)
+    
+    def on_form_prefill(self, form, id):
+        
+        if hasattr(form, 'password'):
+            form.password.data = ''
+        return super().on_form_prefill(form, id)
+    
     column_searchable_list = ['first_name', 'last_name', 'email']
     column_filters = ['data_cadastro', 'endereco']
 
@@ -233,6 +272,7 @@ class ReviewView(ModelView):
 
 
 def set_admin(app, db, models):
+    
     admin = Admin(app, name='Loja Flask Admin', template_mode='bootstrap3')
     admin.add_view(ClienteView(models["Cliente"], db.session))
     admin.add_view(CategoriaView(models["Categoria"], db.session))

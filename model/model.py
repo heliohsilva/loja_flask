@@ -8,12 +8,15 @@ def init_model(db):
         db.Column('categoria_id', db.Integer, db.ForeignKey('categoria.id'), primary_key=True)
     )
 
+
     class Cliente(db.Model):
         id = db.Column(db.Integer, primary_key=True)
+        username = db.Column(db.String(50), unique=True, nullable=False)
+        email = db.Column(db.String(120), unique=True, nullable=False)
+        senha = db.Column(db.String(200), nullable=False)
+
         first_name = db.Column(db.String(50), nullable=False)
         last_name = db.Column(db.String(50), nullable=False)
-        email = db.Column(db.String(120), nullable=False)
-        senha = db.Column(db.String(200), nullable=False)  
         endereco = db.Column(db.Text)
         telefone = db.Column(db.String(15))
         data_cadastro = db.Column(db.Date, default=datetime.utcnow)
@@ -23,13 +26,13 @@ def init_model(db):
         reviews = db.relationship('Review', backref='cliente', lazy=True)
         
         def __str__(self):
-            return f"{self.first_name} <{self.email}>"
+            return f"Cliente <{self.username}>"
         
-        def set_senha(self, senha):
-            self.senha = generate_password_hash(senha)
+        def set_password(self, password):
+            self.senha = generate_password_hash(password)
 
-        def verificar_senha(self, senha):
-            return check_password_hash(self.senha, senha)
+        def check_password(self, password):
+            return check_password_hash(self.senha, password)
         
         def to_dict(self):
             return {
@@ -41,6 +44,9 @@ def init_model(db):
                 'telefone': self.telefone,
                 'data_cadastro': self.data_cadastro.strftime('%Y-%m-%d')
             }
+        
+        def is_admin(self):
+            return self.email == 'admin'
 
     class Categoria(db.Model):
         id = db.Column(db.Integer, primary_key=True)
@@ -237,5 +243,5 @@ def init_model(db):
         'Carrinho': Carrinho,
         'ItemCarrinho': ItemCarrinho,
         'Pagamento': Pagamento,
-        'Review': Review
+        'Review': Review,
     }
