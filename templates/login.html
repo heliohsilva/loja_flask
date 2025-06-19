@@ -1,0 +1,211 @@
+{% include 'header.html' %}
+{% include 'navbar.html' %}
+
+<form method="post" action="{{ url_for('front.login') }}">
+  {{ csrf_token() }}
+  {% with messages = get_flashed_messages() %}
+    {% for msg in messages %}
+      <p class="error">{{ msg }}</p>
+    {% endfor %}
+  {% endwith %}
+  <!-- campos de email e password -->
+</form>
+
+<style>
+  .main-content {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+  }
+
+  .identification-header {
+    text-align: center;
+    position: relative;
+    top: -20px;
+    margin-bottom: 2rem;
+  }
+
+  .identification-header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: #000;
+    margin-bottom: 0.5rem;
+  }
+
+  .forms-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 3rem;
+  }
+
+  .form-box {
+    border: 1px solid #e0e0e0;
+    padding: 2.5rem;
+    background-color: #fff;
+    width: 100%;
+  }
+
+  .login-box {
+    flex-basis: 50%;
+  }
+
+  .form-title-icon {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #000;
+    padding-bottom: 0.7rem;
+    width: fit-content;
+  }
+
+  .login-icon {
+    font-size: 1.5rem;
+    margin-right: 1rem;
+  }
+
+  .register-box {
+    flex-basis: 50%;
+  }
+
+  .register-box h3 {
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
+
+  .input-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+
+  .input-group input {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #e0e0e0;
+    background-color: #f9f9f9;
+    font-size: 1rem;
+  }
+
+  .input-group label {
+    font-size: 0.9rem;
+    color: #888;
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    transform: translateY(-50%);
+    pointer-events: none;
+    transition: all 0.2s ease;
+  }
+
+  .input-group input:focus+label,
+  .input-group input:not(:placeholder-shown)+label {
+    opacity: 0;
+  }
+
+  .input-group input:focus {
+    outline: 1px solid #000;
+    background-color: #fff;
+  }
+
+  .btn-primary {
+    width: 100%;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.2s;
+  }
+
+  .btn-primary:hover {
+    background-color: #333;
+  }
+
+  .error {
+    color: #c00;
+    margin-bottom: 1rem;
+  }
+</style>
+
+<main class="main-content">
+  <div class="identification-header">
+    <h1>IDENTIFICAÇÃO</h1>
+    <p>Faça seu login ou crie uma conta caso não possua cadastro.</p>
+  </div>
+
+  <div class="forms-container">
+
+    <!-- LOGIN -->
+    <div class="form-box login-box">
+      <div class="form-title-icon">
+        <i class="fa-regular fa-user login-icon"></i>
+        <h2>LOGIN</h2>
+      </div>
+      <form method="post" action="{{ url_for('front.login') }}">
+        {{ csrf_token() }}
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for msg in messages %}
+              <p class="error">{{ msg }}</p>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        <div class="input-group">
+          <input type="email" id="login-email" name="email" placeholder=" " required>
+          <label for="login-email">Email</label>
+        </div>
+        <div class="input-group">
+          <input type="password" id="login-senha" name="password" placeholder=" " required>
+          <label for="login-senha">Senha</label>
+        </div>
+        <button type="submit" class="btn-primary">Prosseguir</button>
+      </form>
+    </div>
+
+    <!-- CADASTRO -->
+    <div class="form-box register-box">
+      <h3>Ainda não possuo cadastro.</h3>
+      <form method="post" action="{{ url_for('front.cadastro') }}">
+        {{ csrf_token() }}
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for msg in messages %}
+              <p class="error">{{ msg }}</p>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        <div class="input-group">
+          <input type="text" id="register-nome" name="nome" placeholder=" " required>
+          <label for="register-nome">Nome completo</label>
+        </div>
+        <div class="input-group">
+          <input type="email" id="register-email" name="email" placeholder=" " required>
+          <label for="register-email">Email</label>
+        </div>
+        <div class="input-group">
+          <input type="password" id="register-password" name="password" placeholder=" " required>
+          <label for="register-password">Senha</label>
+        </div>
+        <div class="input-group">
+          <input type="password" id="register-confirm-password" name="confirm_password" placeholder=" " required>
+          <label for="register-confirm-password">Confirmar senha</label>
+        </div>
+        <div class="input-group">
+          <input type="text" id="register-endereco" name="endereco" placeholder=" ">
+          <label for="register-endereco">Endereço</label>
+        </div>
+        <div class="input-group">
+          <input type="tel" id="register-telefone" name="telefone" placeholder=" ">
+          <label for="register-telefone">Telefone</label>
+        </div>
+        <button type="submit" class="btn-primary">Prosseguir</button>
+      </form>
+    </div>
+
+  </div>
+</main>

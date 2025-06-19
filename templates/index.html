@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Budega - Loja Online</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
+
+    <style>
+        /* ... seu CSS permanece igual ... */
+    </style>
+</head>
+
+<body>
+
+    <header class="main-header container">
+        <a href="{{ url_for('index') }}">
+            <div class="logo">
+                <i class="bx bx-store-alt"></i>
+                <span>Budega</span>
+            </div>
+        </a>
+
+        <div class="search-container">
+            <form method="get" class="search-bar">
+                <input type="text" name="search" value="{{ query_original }}" placeholder="Pesquisar" />
+                <button type="submit">Pesquisar</button>
+            </form>
+        </div>
+
+        <nav class="main-nav">
+            <ul>
+                <li><a href="#">Sobre</a></li>
+                <li><a href="#">Contato</a></li>
+            </ul>
+        </nav>
+
+        <div class="header-icons">
+            <ul>
+                <li><a href="{{ url_for('carrinho') }}"><i class="bx bx-cart"></i></a></li>
+                <li><a href="{{ url_for('minha_conta') }}"><i class="bx bx-user-circle"></i></a></li>
+                {% if user.is_authenticated %}
+                <li><a href="{{ url_for('logout') }}"><i class="bx bx-log-out"></i></a></li>
+                {% else %}
+                <li><a href="{{ url_for('login') }}"><i class="bx bx-log-in"></i></a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </header>
+
+    <nav class="category-nav">
+        <div class="container">
+            <ul>
+                {% for categoria in categorias %}
+                <li>
+                    <a href="?categoria={{ categoria.id }}">{{ categoria.nome }}</a>
+                </li>
+                {% else %}
+                <li><span style="color: red;">Nenhuma categoria cadastrada.</span></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </nav>
+
+    <br /><br />
+
+    <main class="container">
+        <div class="product-grid">
+            {% for product in products %}
+            <a href="{{ url_for('produto', product_id=product.id) }}" class="product-card">
+                <div class="product-image">
+                    {% if product.imagem and product.imagem.url %}
+                    <img src="{{ product.imagem.url }}" alt="{{ product.nome }}" class="product_image" />
+                    {% else %}
+                    <img
+                        src="https://placehold.co/300x400/f0f0f0/png?text=Sem+Foto"
+                        alt="Produto sem foto" />
+                    <p style="font-size: 10px; color: red; word-wrap: break-word; margin-top: 5px;">
+                        <strong>Produto sem imagem no banco de dados.</strong>
+                    </p>
+                    {% endif %}
+                </div>
+                <div>
+                    <p class="product-name">{{ product.nome }}</p>
+                    <p class="product-price">R$ {{ '%.2f'|format(product.preco) }}</p>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </main>
+
+    <br /><br />
+    <footer class="container" style="text-align: center; padding: 20px; border-top: 1px solid #e5e5e5;">
+        <p>&copy; 2025 Budega. Todos os direitos reservados.</p>
+    </footer>
+
+</body>
+
+</html>
