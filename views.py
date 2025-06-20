@@ -107,7 +107,7 @@ def login():
 def logout():
     logout_user()
     flash('Logout realizado com sucesso!')
-    return redirect(url_for('views.index'))
+    return redirect(url_for('view.index'))
 
 @view.route('/minha-conta')
 @login_required
@@ -123,11 +123,11 @@ def adicionar_comentario(id):
 
     produto = Produto.query.get_or_404(id)
 
-    review = Review(produto_id=produto.id, cliente_id=current_user.cliente.id, comentario=texto, nota=nota)
+    review = Review(produto_id=produto.id, cliente_id=current_user.id, comentario=texto, nota=nota)
     db.session.add(review)
     db.session.commit()
 
-    return redirect(url_for('views.product', id=id))
+    return redirect(url_for('view.product', id=id))
 
 @view.route('/carrinho')
 @login_required
@@ -165,7 +165,7 @@ def adicionar_ao_carrinho(id):
 
     db.session.commit()
 
-    return redirect(url_for('views.carrinho'))
+    return redirect(url_for('view.carrinho'))
 
 @view.route('/pagamento')
 @login_required
@@ -195,9 +195,12 @@ def pos_pagamento():
             pedido_id=pedido.id,
             produto_id=item.produto_id,
             quantidade=item.quantidade,
-            preco=item.preco
+            preco_unitario=item.preco
         )
         db.session.add(item_pedido)
+
+    for item in carrinho.itens:
+        db.session.delete(item)
 
     db.session.delete(carrinho)
     db.session.commit()
