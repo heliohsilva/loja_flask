@@ -211,3 +211,62 @@ def pos_pagamento():
 @view.route('/thanks')
 def thanks():
     return render_template('thanks.html')
+
+# --------------------------------------------
+@view.route('/diminuir_do_carrinho/<int:id>/')
+@login_required
+def diminuir_do_carrinho(id):
+    carrinho = Carrinho.query.filter_by(cliente_id=current_user.id).first()
+    if not carrinho:
+        flash('Carrinho não encontrado.', 'error')
+        return redirect(url_for('view.carrinho'))
+
+    item = ItemCarrinho.query.filter_by(carrinho_id=carrinho.id, produto_id=id).first()
+    if not item:
+        flash('Item não encontrado no carrinho.', 'error')
+        return redirect(url_for('view.carrinho'))
+
+    if item.quantidade > 1:
+        item.quantidade -= 1
+        db.session.commit()
+    else:
+        db.session.delete(item)
+        db.session.commit()
+
+    return redirect(url_for('view.carrinho'))
+
+@view.route('/remover_do_carrinho/<int:id>/')
+@login_required
+def remover_do_carrinho(id):
+    carrinho = Carrinho.query.filter_by(cliente_id=current_user.id).first()
+    if not carrinho:
+        flash('Carrinho não encontrado.', 'error')
+        return redirect(url_for('view.carrinho'))
+
+    item = ItemCarrinho.query.filter_by(carrinho_id=carrinho.id, produto_id=id).first()
+    if item:
+        db.session.delete(item)
+        db.session.commit()
+        flash('Item removido do carrinho.')
+    else:
+        flash('Item não encontrado no carrinho.', 'error')
+
+    return redirect(url_for('view.carrinho'))
+
+@view.route('/aumentar_no_carrinho/<int:id>/')
+@login_required
+def aumentar_no_carrinho(id):
+    carrinho = Carrinho.query.filter_by(cliente_id=current_user.id).first()
+    if not carrinho:
+        flash('Carrinho não encontrado.', 'error')
+        return redirect(url_for('view.carrinho'))
+
+    item = ItemCarrinho.query.filter_by(carrinho_id=carrinho.id, produto_id=id).first()
+    if item:
+        item.quantidade += 1
+        db.session.commit()
+    else:
+        # Opcional: criar um novo item no carrinho com quantidade 1 se não existir
+        flash('Item não encontrado no carrinho.', 'error')
+
+    return redirect(url_for('view.carrinho'))
