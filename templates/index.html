@@ -239,8 +239,8 @@
 
     <main class="container">
         <div class="product-grid">
-            {% for product in products %}
-            <a href="{{ url_for('view.produto', product_id=product.id) }}" class="product-card">
+            {% for product in produtos %}
+            <a href="{{ url_for('view.product', id=product.id) }}" class="product-card">
                 <div class="product-image">
                     {% if product.imagem and product.imagem.url %}
                     <img src="{{ product.imagem.url }}" alt="{{ product.nome }}" class="product_image" />
