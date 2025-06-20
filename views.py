@@ -132,10 +132,10 @@ def adicionar_comentario(id):
 @view.route('/carrinho')
 @login_required
 def carrinho():
-    carrinho = Carrinho.query.filter_by(cliente_id=current_user.cliente.id).first()
+    carrinho = Carrinho.query.filter_by(cliente_id=current_user.id).first()
 
     if not carrinho:
-        carrinho = Carrinho(cliente_id=current_user.cliente.id)
+        carrinho = Carrinho(cliente_id=current_user.id)
         db.session.add(carrinho)
         db.session.commit()
 
@@ -149,9 +149,9 @@ def carrinho():
 def adicionar_ao_carrinho(id):
     produto = Produto.query.get_or_404(id)
 
-    carrinho = Carrinho.query.filter_by(cliente_id=current_user.cliente.id).first()
+    carrinho = Carrinho.query.filter_by(cliente_id=current_user.id).first()
     if not carrinho:
-        carrinho = Carrinho(cliente_id=current_user.cliente.id)
+        carrinho = Carrinho(cliente_id=current_user.id)
         db.session.add(carrinho)
         db.session.commit()
 
@@ -170,7 +170,7 @@ def adicionar_ao_carrinho(id):
 @view.route('/pagamento')
 @login_required
 def pagamento():
-    carrinho = Carrinho.query.filter_by(cliente_id=current_user.cliente.id).first()
+    carrinho = Carrinho.query.filter_by(cliente_id=current_user.id).first()
     if not carrinho or not carrinho.itens:
         flash('Seu carrinho está vazio.', 'error')
         return redirect(url_for('views.carrinho'))
@@ -181,12 +181,12 @@ def pagamento():
 @view.route('/pos_pagamento', methods=['POST'])
 @login_required
 def pos_pagamento():
-    carrinho = Carrinho.query.filter_by(cliente_id=current_user.cliente.id).first()
+    carrinho = Carrinho.query.filter_by(cliente_id=current_user.id).first()
     if not carrinho or not carrinho.itens:
         flash('Não há itens no carrinho.', 'error')
         return redirect(url_for('views.index'))
 
-    pedido = Pedido(cliente_id=current_user.cliente.id)
+    pedido = Pedido(cliente_id=current_user.id)
     db.session.add(pedido)
     db.session.commit()
 
