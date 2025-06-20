@@ -112,7 +112,7 @@ def logout():
 @view.route('/minha-conta')
 @login_required
 def minha_conta():
-    cliente = Cliente.query.filter_by(user_id=current_user.id).first()
+    cliente = Cliente.query.filter_by(id=current_user.id).first()
     return render_template('minha_conta.html', user=cliente)
 
 @view.route('/adicionar_comentario/<int:id>/', methods=['POST'])

@@ -13,14 +13,15 @@ class ClienteView(ModelView):
         self.model = model
     
     def is_accessible(self):
-        try:
-            jwt_required()(lambda: None)()  
-            current_user_id = get_jwt_identity()
-            user = self.model.query.get(current_user_id)
-            return user and user.is_admin
-        
-        except Exception:
-            return False
+        #try:
+        #    jwt_required()(lambda: None)()  
+        #    current_user_id = get_jwt_identity()
+        #    user = self.model.query.get(current_user_id)
+        #    return user and user.is_admin
+        #
+        #except Exception:
+        #    return False
+        return True;
 
     def inaccessible_callback(self, name, **kwargs):
 
