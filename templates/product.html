@@ -321,7 +321,7 @@
                     </div>
                     <span class="rating-value">{{ produto.star_rating() }}</span>
                     <a href="#reviews" class="reviews-count">
-                        {{ produto.count_reviews }} avaliações
+                        ({{ produto.count_reviews() }}) avaliações
                     </a>
                 </div>
                 {% if produto.em_estoque %}
@@ -351,7 +351,7 @@
     </section>
 
     <section id="reviews" class="reviews-section">
-        <h2>Avaliações ({{ produto.count_reviews }})</h2>
+        <h2>Avaliações ({{ produto.count_reviews() }})</h2>
 
         {% if current_user.is_authenticated %}
         <form action="{{ url_for('view.adicionar_comentario', id=produto.id) }}" method="post" class="review-form">
