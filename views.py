@@ -28,7 +28,7 @@ def index():
         produtos = produtos.filter(Produto.nome.ilike(f'%{query}%'))
 
     if categoria_id:
-        produtos = produtos.filter(Produto.categoria_id == categoria_id)
+        produtos = Produto.query.join(Produto.categorias).filter(Categoria.id == categoria_id)
 
     produtos = produtos.all()
 
